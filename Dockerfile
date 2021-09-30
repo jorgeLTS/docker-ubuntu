@@ -1,21 +1,26 @@
 FROM ubuntu:20.04
 
+### Labels
 LABEL maintainer="Jorge Mendoza (github.com/jorgeLTS)"
+
+### Update
+RUN apt-get update -y
 
 ### Set defaults
 ENV DEBCONF_NONINTERACTIVE_SEEN=true \
         DEBUG_MODE=FALSE \
-        TZ=America/Mexico_City
+        TZ="America/Mexico_City" \
+        LANG="es_MX.UTF-8" \
+        LANGUAGE="es_MX:es" \
+        LC_ALL="es_MX.UTF-8"
 
 ### Dependencies Addon
 RUN set -x && \
-    apt-get update && \
     apt-get install -y \
         ca-certificates \
         language-pack-es \
         apt-transport-https \
-        lsb-release && \
-    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
-    echo $TZ > /etc/timezone && \
-    apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y tzdata && \
+        tzdata \
+        lsb-release
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     dpkg-reconfigure tzdata
